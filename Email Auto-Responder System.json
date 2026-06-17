@@ -1,0 +1,204 @@
+{
+  "name": "Email Auto-Responder System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-form",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "3979318a-3e0d-4165-b9d9-bb5d14f8ba66",
+      "name": "Webhook",
+      "webhookId": "1f2c9225-0c4c-46da-bbf4-156fc9b4e662"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_S3MJ79jdnP6WDbGXy_j9xDI6b5qW8q8fqlU1Ql1uhQ",
+          "mode": "list",
+          "cachedResultName": "lead-form",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S3MJ79jdnP6WDbGXy_j9xDI6b5qW8q8fqlU1Ql1uhQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_S3MJ79jdnP6WDbGXy_j9xDI6b5qW8q8fqlU1Ql1uhQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{$json.body.name}}",
+            "Email": "={{$json.body.email}}",
+            "Phone": "={{$json.body.phone}}",
+            "Message": "={{$json.body.message}}",
+            "Date": "={{$now}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "30cff55e-5478-4067-b19d-d248f50ed692",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "FB4hI1IFi02yq4fN",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "babarabbaskhokhar3393@gmail.com",
+        "subject": "New Lead Received",
+        "message": "=New Lead Received  Name: {{$json.body.name}}  Email: {{$json.body.email}}  Phone: {{$json.body.phone}}  Message: {{$json.body.message}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        192,
+        -112
+      ],
+      "id": "6a37e6e6-2665-45af-bbaa-f7fbfead90c2",
+      "name": "Team Notification",
+      "webhookId": "a78b6daa-51df-44dd-b20b-0aa41088f2ae",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "zcrKdWfZ7OkoevGc",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "babar.jigooo96@gmail.com",
+        "subject": "Thank You For Contacting Us",
+        "message": "=Hi {{$json.Name}},\n\nThank you for contacting us.\n\nWe have received your inquiry and our team will get back to you shortly.\n\nBest Regards,\nSupport Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        96
+      ],
+      "id": "288627e7-65b5-497b-a152-04c3ada14444",
+      "name": "Customer Auto Reply",
+      "webhookId": "a78b6daa-51df-44dd-b20b-0aa41088f2ae",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "zcrKdWfZ7OkoevGc",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Customer Auto Reply",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Team Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "4b1ef303-470d-4969-aead-a998db1b336c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d424743025bec5009babfaef2f79b3c75a37f9945ba27d8e733a678dbe205c12"
+  },
+  "nodeGroups": [],
+  "id": "I5WRuQE3GzQnjCHj",
+  "tags": []
+}
