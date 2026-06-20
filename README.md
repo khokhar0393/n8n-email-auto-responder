@@ -29,4 +29,4 @@ Ideal for businesses and agencies that want to automate lead handling and instan
 
 ## Author
 
-Huzaifa Babar
+Babar Abbas Khokhar
